@@ -138,15 +138,13 @@ components:
     AllUsers:
       type: array
       items:
-        $ref: '#/components/schemas/UserInfo'
+        $ref: '#/components/schemas/LoginInfo'
     UserInfo:
       required:
       - login
       - token
       type: object
       properties:
-        login:
-          $ref: '#/components/schemas/LoginInfo'
         token:
           type: string
           example: thisisatoken
