@@ -1,3 +1,6 @@
+import {ParamsDictionary, Query, Request, Response, Send} from "express-serve-static-core"
+
+
 type ErrorMessage = string
 type LoginInfo = {
     login : string,
@@ -6,5 +9,14 @@ type LoginInfo = {
 type AllUsers = LoginInfo[]
 type UserInfo = string
 
+export interface ApiResponse<ResBody> extends Response {
+    json: Send<{data: ResBody} | {message: string}, this>
+}
+
+export interface ApiRequest<ReqParams extends ParamsDictionary, ReqQuery extends Query, ReqBody> extends Request {
+    params: ReqParams,
+    query: ReqQuery,
+    body: ReqBody
+}
 
 export {LoginInfo, ErrorMessage, AllUsers, UserInfo}

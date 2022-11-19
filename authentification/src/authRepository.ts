@@ -28,13 +28,19 @@ export default class AuthRepository {
     }
 
     getAllUsers(): AllUsers {
-        const query = "SELECT (login, password) FROM users"
+        const query = "SELECT login, password FROM auth"
         const statement = this.db.prepare(query);
         return statement.all()
     }
 
+    getUser(username: string): LoginInfo {
+        const query = "SELECT login, password FROM auth WHERE login = ?"
+        const statement = this.db.prepare(query);
+        return statement.get(username)
+    }
+
     getLoginInfo(info: LoginInfo): LoginInfo {
-        const query = "SELECT (login, password) FROM users WHERE u_login= ? AND password= ?"
+        const query = "SELECT login, password FROM auth WHERE login= ? AND password= ?"
         const statement = this.db.prepare(query);
         return statement.get(info.login, info.password)
     }
