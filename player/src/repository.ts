@@ -34,4 +34,9 @@ export default class PlayerRepository {
         const statement = this.db.prepare("SELECT * FROM team WHERE user_id = ?")
         return statement.get(playerId);
     }
+
+    modifyPlayer(playerId: number, data: Player) {
+        const statement = this.db.prepare("UPDATE player SET username = ? WHERE user_id = ?");
+        statement.run(data.username, playerId);
+    }
 }

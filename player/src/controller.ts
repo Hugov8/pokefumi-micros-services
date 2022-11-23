@@ -7,3 +7,8 @@ export function getPlayer(playerId: number): Player {
     user.team = repository.getTeam(playerId);
     return user;
 }
+
+export function modifyPlayer(playerId: number, data: Player): Player {
+    repository.modifyPlayer(playerId, data);
+    return repository.getPlayer(playerId);
+}
