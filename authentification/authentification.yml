@@ -85,6 +85,16 @@ paths:
       responses:
         '201':
           description: Creation of the player successfull
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: integer
+                    description: number of the registered player in the database
+
+                
         '400':
           description: Creation of the player failed
           content:
@@ -128,10 +138,10 @@ components:
     LoginInfo:
       type: object
       required:
-        - username
+        - login
         - password
       properties:
-        username:
+        login:
           type: string
         password:
           type: string
