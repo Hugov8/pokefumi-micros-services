@@ -18,12 +18,13 @@ export const register = (app: express.Application) => {
         if(logUser==undefined){
             return res.status(400).json({message: "Please provide your log in the body"})
         }
-        if (authRepo.getLoginInfo(logUser)==undefined){
+        const id = authRepo.getLoginInfo(logUser)
+        if (id==undefined){
             return res.status(400).json({message: "Please verify your login/password"})
         }
 
         
-        let token = jwt.sign(logUser, privateKey)
+        let token = jwt.sign(id, privateKey)
         
         return res.status(200).json({token: token})
 
@@ -74,8 +75,8 @@ export const register = (app: express.Application) => {
     // Using only for tests purpose
     // To delete
     app.get('/testToken/:token', (req: ApiRequest<{token: string},any, any>,
-        res: ApiResponse<LoginInfo> )=>{
-            const info: LoginInfo = jwt.verify(req.params.token, privateKey) as LoginInfo
+        res: ApiResponse<any> )=>{
+            const info = jwt.verify(req.params.token, privateKey)
             console.log(jwt.verify(req.params.token, privateKey))
             return res.status(200).json({data: info})
         })

@@ -39,8 +39,8 @@ export default class AuthRepository {
         return statement.get(username)
     }
 
-    getLoginInfo(info: LoginInfo): LoginInfo {
-        const query = "SELECT login, password FROM auth WHERE login= ? AND password= ?"
+    getLoginInfo(info: LoginInfo): {id: number|bigint} {
+        const query = "SELECT id FROM auth WHERE login= ? AND password= ?"
         const statement = this.db.prepare(query);
         return statement.get(info.login, info.password)
     }
