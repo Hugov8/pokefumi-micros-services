@@ -1,7 +1,7 @@
 import Database from "better-sqlite3";
 import * as path from "path";
 import * as fs from "fs";
-import {Pokemon} from "./models";
+import {PokemonDb} from "./models";
 
 export default class StoreRepository {
     db: Database.Database
@@ -26,9 +26,14 @@ export default class StoreRepository {
         }
     }
 
-    getAll() : Array<Pokemon> {
+    getAll() : Array<PokemonDb> {
         const statement = this.db.prepare("SELECT * from pokemon");
         return statement.all();
+    }
+
+    getPokemonById(id:number): PokemonDb {
+        const statement = this.db.prepare("SELECT * from POKEMON where pokemon_id = ?");
+        return statement.get(id);
     }
 
 }

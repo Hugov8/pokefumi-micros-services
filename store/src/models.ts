@@ -1,4 +1,5 @@
-export type Pokemon = {
+//type for a pokemon stored in the db
+export type PokemonDb = {
     pokemon_id: number
     price: number
 }
@@ -7,6 +8,16 @@ export type Pokemon = {
 export type PokemonApi = {
     id: number,
     name: string,
+    height: number,
+    weight: number,
+    base_experience: number
+}
+
+//Return type to the api
+export type Pokemon = {
+    pokemon_id: number,
+    price: number,
+    name: string
     height: number,
     weight: number,
     base_experience: number
