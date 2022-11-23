@@ -1,0 +1,242 @@
+---
+openapi: 3.0.0
+info:
+  title: Role API
+  description: This is the API to check the role of a given Token
+  license:
+    name: GPL v3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/pokefumi/Authentification/1-0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: developers
+  description: Operation to test the API
+- name: admins
+  description: Operations available only to admins
+- name: user
+  description: Operations available to service to check the role of the token
+paths:
+  /:
+    get:
+      tags:
+        - developers
+      summary: home page of the service
+      description: |
+        Nothing to do
+      operationId: home
+      responses:
+        "200":
+          description: welcome message
+          content:
+            text/html:
+              schema:
+                type: string
+                example: <h1>Test</h1>
+  /addToken:
+    post:
+      tags:
+      - admins
+      summary: add a token into the database
+      
+      parameters:
+        - in: header
+          name: password
+          description: Password to write into the database
+          schema:
+            type: string
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewTokenInfo'
+
+      
+      responses:
+        "200":
+          description: Adding a token successfull 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    description: the new Token generated
+                  
+        "401":
+          description: authentification required to access this endpoint
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /getRole/{token}:
+    get:
+      tags:
+        - user
+      summary: Check the role of the given token
+      parameters:
+        - in: path
+          name: token
+          schema:
+            type: string
+            description: Give the role token
+            example: thisisatoken
+          required: true
+
+
+      responses:
+        '200':
+          description: Give the role
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    description: \"Admin" or "Reporter" according to the role of the token
+                    example: "Admin"
+
+                
+        '404':
+          description: Token doesn't exist in the database
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /allToken:
+    get:
+      tags:
+        - developers
+        - admins
+      summary: Return all the token
+      parameters:
+        - in: header
+          name: password
+          schema:
+            type: string
+            description: Admin password to the database
+            example: password
+          required: true
+      responses:
+        '200':
+          description: Return the database
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoginInfo'
+        '400':
+          description: Bad request, provide the password in header
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        '401':
+          description: Wrong password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /removeToken/{token}:
+    post:
+      tags:
+      - admins
+      summary: add a token into the database
+      
+      parameters:
+        - in: header
+          name: password
+          description: Password to write into the database
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: token
+          description: Token we want to remove
+          schema:
+            type: string
+          required: true
+           
+      responses:
+        "202":
+          description: Remove of the token succeed 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    description: Success
+                  
+        "404":
+          description: Token doesn't exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+        "401":
+          description: authentification required to access this endpoint
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'         
+
+
+components:
+  schemas:
+    ErrorMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Description of the failure
+    LoginInfo:
+      type: object
+      required:
+        - token
+        - login
+        - role
+      properties:
+        login:
+          type: string
+        token:
+          type: string
+        role:
+          type: string
+          description: Only "Admin" or "Reporter"
+    NewTokenInfo:
+      required:
+      - login
+      - role
+      type: object
+      properties:
+        login:
+          type: string
+          example: username
+        role:
+          type: string
+          description: Only "Admin" or "Reporter"
+          example: Admin
