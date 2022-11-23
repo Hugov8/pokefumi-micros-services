@@ -13,6 +13,10 @@ export interface ApiResponse<ResBody> extends Response {
     json: Send<{data: ResBody} | {message: string}, this>
 }
 
+export interface ApiResponseToken extends Response {
+    json: Send<{token: string} | {message: string}, this>
+}
+
 export interface ApiRequest<ReqParams extends ParamsDictionary, ReqQuery extends Query, ReqBody> extends Request {
     params: ReqParams,
     query: ReqQuery,

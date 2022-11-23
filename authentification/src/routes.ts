@@ -1,5 +1,5 @@
 import * as express from "express";
-import { LoginInfo, ApiRequest, ApiResponse, AllUsers } from "./authModel";
+import { LoginInfo, ApiRequest, ApiResponse, ApiResponseToken, AllUsers } from "./authModel";
 import AuthRepository from "./authRepository";
 import * as jwt from "jsonwebtoken"
 
@@ -10,7 +10,8 @@ export const register = (app: express.Application) => {
     app.get('/', (req: ApiRequest<any, any, any>,
         res: ApiResponse<any>) => res.send('<h1>Hello World</h1>'));
 
-    app.get('/login', (req, res) => {
+    app.get('/login', (req: ApiRequest<any, any, LoginInfo>,
+        res: ApiResponseToken) => {
 
         const logUser: LoginInfo = req.body
         if(logUser==undefined){
@@ -52,6 +53,10 @@ export const register = (app: express.Application) => {
         // Check if the token correspond to an admin
         // TODO
         // Attendre implémentation des tokens admin
+        const adminToken = req.headers.token
+        if(adminToken != "admin"){
+            return res.status(401).json({message: "Admin token incorrect"})
+        }
 
         const infos = authRepo.getAllUsers()
         return res.status(200).json({data: infos})
