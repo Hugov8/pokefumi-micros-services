@@ -1,6 +1,7 @@
 import * as express from "express";
 import { LoginInfo, ApiRequest, ApiResponse, ApiResponseToken, AllUsers } from "./authModel";
 import AuthRepository from "./authRepository";
+import axios from "axios"
 import * as jwt from "jsonwebtoken"
 
 const authRepo = new AuthRepository()
@@ -44,7 +45,7 @@ export const register = (app: express.Application) => {
 
     });
 
-    app.get('/usersLogin', (req: ApiRequest<any, any, any>, 
+    app.get('/usersLogin', async (req: ApiRequest<any, any, any>, 
         res: ApiResponse<AllUsers>) => {
         if (req.headers.token == undefined){
             return res.status(401).json({message : "Token missing, please authentificate as an admin"})
@@ -54,7 +55,15 @@ export const register = (app: express.Application) => {
         // TODO
         // Attendre implémentation des tokens admin
         const adminToken = req.headers.token
-        if(adminToken != "admin"){
+        const role = await axios.get<{ data: string }>(`http://role:5002/getRole/`+adminToken).then((http_res) => {
+            if (http_res.status == 200) {
+                return http_res.data.data;
+            }
+        }).catch((err) => {
+            console.log(err.data);
+            return undefined;
+        })
+        if(role != "Admin"){
             return res.status(401).json({message: "Admin token incorrect"})
         }
 
