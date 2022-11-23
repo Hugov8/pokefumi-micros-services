@@ -1,6 +1,7 @@
 import Database from "better-sqlite3";
 import * as path from "path";
 import * as fs from "fs";
+import {Pokemon} from "./models";
 
 export default class StoreRepository {
     db: Database.Database
@@ -23,6 +24,11 @@ export default class StoreRepository {
             const migrations = ["db/migrations/init.sql"]
             migrations.forEach(applyMigration)
         }
+    }
+
+    getAll() : Array<Pokemon> {
+        const statement = this.db.prepare("SELECT * from pokemon");
+        return statement.all();
     }
 
 }
