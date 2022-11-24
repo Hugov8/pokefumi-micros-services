@@ -1,4 +1,5 @@
 import Database from "better-sqlite3";
+import {Pokemon, Player, Team} from "./model";
 import fs from 'fs';
 
 export default class PlayerRepository {
@@ -26,7 +27,7 @@ export default class PlayerRepository {
     }
 
     getPlayer(playerId: number): Player {
-        const statement = this.db.prepare("SELECT user_id, username FROM player WHERE user_id = ?")
+        const statement = this.db.prepare("SELECT * FROM player WHERE user_id = ?")
         return statement.get(playerId);
     }
     
@@ -38,5 +39,15 @@ export default class PlayerRepository {
     modifyPlayer(playerId: number, data: Player) {
         const statement = this.db.prepare("UPDATE player SET username = ? WHERE user_id = ?");
         statement.run(data.username, playerId);
+    }
+
+    addPokemonToTeam(id: number, pokemon_id: number, user_id: number) {
+        const statement = this.db.prepare(`UPDATE team SET pokemon${id} = ? where user_id = ?`);
+        statement.run(pokemon_id, user_id);
+    }
+
+    setCredit(user_id: number, credit: number) {
+        const statement = this.db.prepare("UPDATE player SET credits = ? where user_id = ?");
+        statement.run(credit, user_id);
     }
 }

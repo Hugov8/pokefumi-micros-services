@@ -1,10 +1,11 @@
-type Player = {
+export type Player = {
     user_id: string,
     username: string,
+    credits: number,
     team: Omit<Team, "user_id">
 }
 
-type Team = {
+export type Team = {
     user_id: string,
     pokemon1: number,
     pokemon2: number,
@@ -12,4 +13,9 @@ type Team = {
     pokemon4: number,
     pokemon5: number,
     pokemon6: number
+}
+
+export type Pokemon = {
+    pokemon_id: number
+    price: number
 }

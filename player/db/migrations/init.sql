@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS player (
     user_id INTEGER PRIMARY KEY,
+    credits INTEGER,
     username TEXT
 );
 

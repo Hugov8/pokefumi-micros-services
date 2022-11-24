@@ -8,6 +8,10 @@ const pokemonInstance = axios.create({
     baseURL: "http://localhost:5003"
 });
 
+const playerInstance = axios.create({
+    baseURL: "http://localhost:5001"
+})
+
 export async function getAllPokemon() {
     const list = repository.getAll();
     return await Promise.all(list.map(getPokemonDetails));
@@ -33,4 +37,11 @@ async function getPokemonDetails(pokemon: PokemonDb): Promise<Pokemon> {
         weight: details.weight,
         base_experience: details.base_experience
     }
+}
+
+export async function buyPokemonForPlayer(pokemon: Pokemon, player_id: number) {
+    return playerInstance.post(`/player/${player_id}/buy_pokemon`, <PokemonDb>{
+        pokemon_id: pokemon.pokemon_id,
+        price: pokemon.price
+    });
 }

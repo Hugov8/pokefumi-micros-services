@@ -1,5 +1,5 @@
 import express from "express";
-import {getAllPokemon, getPokemon} from "./controller";
+import {buyPokemonForPlayer, getAllPokemon, getPokemon} from "./controller";
 import * as jwt from "./jwt";
 import {Pokemon} from "./models";
 
@@ -19,13 +19,14 @@ export const register = (app: express.Application) => {
             return res.sendStatus(400);
         }
         const token = req.headers.token.toString();
-        const userId: { id: number } = jwt.decode(token);
+        const user: { id: number } = jwt.decode(token);
+
         const pokemon_id = parseInt(req.params.id);
         const pokemon: Pokemon | {} = await getPokemon(pokemon_id);
         if((<Pokemon>pokemon).pokemon_id == undefined) {
             return res.sendStatus(404);
         }
         const real_pokemon = <Pokemon>pokemon;
-        // TODO: Modifie le player pour ajouter le pokemon, et enlever des credits
+        await buyPokemonForPlayer(real_pokemon, user.id);
     })
 }
