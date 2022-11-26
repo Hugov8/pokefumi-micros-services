@@ -1,7 +1,7 @@
 import {app} from "./app";
 import {AddressInfo} from 'net';
 
-const server = app.listen(5002, '0.0.0.0', () => {
+const server = app.listen(5004, '0.0.0.0', () => {
     const {port, address} = server.address() as AddressInfo;
     console.log("Server listenng on:", "http://"+address+":"+port);
 })

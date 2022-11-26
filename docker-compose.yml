@@ -16,4 +16,13 @@ services:
     build: ./match/
     ports:
       - "5005:5005"
+  store:
+    build: ./store/
+    ports:
+      - "5004:5004"
+  pokemon:
+    build: ./pokemon/
+    ports:
+      - "5003:5003"
+  
 
