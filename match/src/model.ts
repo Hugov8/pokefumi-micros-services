@@ -5,6 +5,14 @@ export interface ApiResponse<ResBody> extends Response {
     json: Send<{data: ResBody} | {message: string}, this>
 }
 
+export type Pokemon = {
+    id: number,
+    name: string,
+    height: number,
+    weight: number,
+    base_experience: number
+} 
+
 export type ID = number | bigint
 export enum Status {
     PREPARATION = 0,

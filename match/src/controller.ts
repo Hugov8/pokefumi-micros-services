@@ -1,4 +1,4 @@
-import { MatchData, ID, RoundData } from "./model"
+import { MatchData, ID, RoundData, Pokemon } from "./model"
 import axios from "axios"
 
 export function currentRound(match: MatchData): ID {
@@ -18,10 +18,32 @@ export function currentRound(match: MatchData): ID {
     }
 }
 
+async function getPokemon(idPokemon: ID): Promise<any> {
+    return await axios.get("http://pokemon:5003/pokemon/"+idPokemon).then((res)=>{
+        if(res.status == 200){
+            return res.data
+        }
+    }).catch( (err) =>{
+        console.log(err)
+        return undefined
+    })
+}
+
+//Juge puissance pokemon sur son expérience de base
+const forcePokemon = (pokemon: Pokemon) => pokemon.base_experience
 
 export function playRound(round: RoundData): number{
 
     //TODO appeler service pokemon pour avoir les stats
-    const winner: number = round.pokemon_j1>round.pokemon_j2 ? 1 : 2
+    const pokemon1: Promise<Pokemon> = getPokemon(round.pokemon_j1).then(val => val).catch(err => console.log(err))
+    const pokemon2: Promise<Pokemon> = getPokemon(round.pokemon_j2).then(val => val).catch(err => console.log(err))
+    
+    let winner: number = -1
+    Promise.all([pokemon1, pokemon2]).then(value => {
+        winner = forcePokemon(value[0])>forcePokemon(value[1]) ? 1 : 2
+    }).catch(err => {
+        console.log(err)
+    })
+
     return winner
 }
