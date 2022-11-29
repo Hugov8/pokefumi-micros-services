@@ -1,0 +1,54 @@
+---
+openapi: 3.0.0
+info:
+  title: Pokemon API
+  description: This is the API of the pokemon service
+  license:
+    name: GPL v3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.0
+tags:
+- name: admins
+  description: Operations available only to admins
+- name: reporter
+  description: Operation available only to reporter
+- name: player
+  description: Operations available only to player
+paths:
+  /pokemon/<id>:
+    get:
+      summary: Return pokemon informations
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+      responses:
+        default:
+          description: Returns the pokemon informations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pokemon"
+components:
+  schemas:
+    Pokemon:
+      type: object
+      properties:
+          id:
+            type: number
+            example: 1
+          name:
+            type: string
+            example: "bulbasaur"
+          height:
+            type: number
+            example: 7
+          weight:
+            type: number
+            example: 69
+          base_experience:
+            type: number
+            example: 64
+      

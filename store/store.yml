@@ -1,0 +1,73 @@
+---
+openapi: 3.0.0
+info:
+  title: Store API
+  description: This is the API of the store service
+  license:
+    name: GPL v3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.0
+tags:
+- name: admins
+  description: Operations available only to admins
+- name: reporter
+  description: Operation available only to reporter
+- name: player
+  description: Operations available only to player
+paths:
+  /pokemons:
+    get:
+      summary: Return all pokemons in the store
+      responses:
+        default:
+          description: Returns the pokemon
+          content:
+            application/json:
+              schema:
+                type: array
+                items:                    
+                  $ref: '#/components/schemas/Pokemon'  
+  /pokemon/<id>:
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+            example: 6
+
+      responses:
+        default:
+          description: Return the pokemon corresponding to the id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pokemon"
+
+  # /pokemon/<id>/buy: TODO
+
+components:
+  schemas:
+    Pokemon:
+      type: object
+      properties:
+          pokemon_id:
+            type: number
+            example: 1
+          price:
+            type: number
+            example: 2345
+          name:
+            type: string
+            example: "bulbasaur"
+          height:
+            type: number
+            example: 7
+          weight:
+            type: number
+            example: 69
+          base_experience:
+            type: number
+            example: 64
+      
