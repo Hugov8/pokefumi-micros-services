@@ -7,15 +7,25 @@ export const register = (app: express.Application) => {
     app.get('/', (req,res) => res.send('<h1>Player service</h1>'));
 
     app.get('/player', (req: any, res) => {
-        let datas = jwt.decode(req.get("token"));
+        //let datas = jwt.decode(req.get("token"));
         res.status(200).send(controller.getPlayer(req.params.playerId))
+    })
+
+    //TODO: Supprimer (pour debug)
+    app.get('/allPlayer', (req, res) => {
+        res.send(controller.allPlayer())
+    })
+
+    app.post('/player', (req: any, res)=>{
+        let userId = req.body.id
+        res.send(controller.addPlayer(userId))
     })
 
     app.put('/player', (req: any, res) => {
         // let datas = jwt.decode(req.get("token"));
         let userId = req.body.id;
         let data = req.body.data;
-        res.send(controller.modifyPlayer(userId, data));
+        res.status(201).send(controller.modifyPlayer(userId, data));
     })
 
     app.post('/player/:player_id/buy_pokemon', (req, res) => {

@@ -31,6 +31,11 @@ export default class PlayerRepository {
         return statement.get(playerId);
     }
     
+    allPlayer(): Player[] {
+        const statement = this.db.prepare("SELECT * FROM player")
+        return statement.all()
+    }
+
     getTeam(playerId: number) : Team {
         const statement = this.db.prepare("SELECT * FROM team WHERE user_id = ?")
         return statement.get(playerId);
@@ -39,6 +44,11 @@ export default class PlayerRepository {
     modifyPlayer(playerId: number, data: Player) {
         const statement = this.db.prepare("UPDATE player SET username = ? WHERE user_id = ?");
         statement.run(data.username, playerId);
+    }
+
+    addPlayer(playerId: number) {
+        const statement = this.db.prepare("INSERT INTO player (user_id, credits) VALUES (?, 100)")
+        statement.run(playerId)
     }
 
     addPokemonToTeam(id: number, pokemon_id: number, user_id: number) {

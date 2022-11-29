@@ -30,7 +30,7 @@ export const register = (app: express.Application) => {
 
     });
     
-    app.post('/register', (req: ApiRequest<any, any, LoginInfo>, 
+    app.post('/register', async (req: ApiRequest<any, any, LoginInfo>, 
         res: ApiResponse<number|bigint>) => {
         const logUser: LoginInfo = req.body
         console.log(req.body)
@@ -42,6 +42,15 @@ export const register = (app: express.Application) => {
         }
         console.log(logUser)
         const inscrit = authRepo.registerPlayer(logUser)
+        const playerRes = await axios.post<{ data: string }>(`http://player:5000/player`, {id: inscrit}).then((http_res) => {
+            if (http_res.status == 200) {
+                return http_res;
+            }
+        }).catch((err) => {
+            console.log(err.data);
+            return undefined;
+        })
+        
         return res.status(201).json({data: inscrit})
 
     });
@@ -51,10 +60,7 @@ export const register = (app: express.Application) => {
         if (req.headers.token == undefined){
             return res.status(401).json({message : "Token missing, please authentificate as an admin"})
         }
-        //
-        // Check if the token correspond to an admin
-        // TODO
-        // Attendre implémentation des tokens admin
+
         const adminToken = req.headers.token
         const role = await axios.get<{ data: string }>(`http://role:5002/getRole/`+adminToken).then((http_res) => {
             if (http_res.status == 200) {

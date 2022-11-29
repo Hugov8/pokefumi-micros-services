@@ -130,6 +130,7 @@ export const register = (app: express.Application) => {
             if(idPokemon==undefined){
                 return res.status(400).json({message: "Provide the id of the pokemon"})
             }
+            //TODO Vérifier si le joueur possède bien le pokemon
             
             const numJoueur: number = match.joueur1==idPlayer.id ? 1 : 2
             const change: number = matchRepo.addPokemonRound(currentRound(match), numJoueur, idPokemon)

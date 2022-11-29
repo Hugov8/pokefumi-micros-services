@@ -39,6 +39,7 @@ async function getPokemonDetails(pokemon: PokemonDb): Promise<Pokemon> {
     }
 }
 
+// Rôle de player ici ?
 export async function buyPokemonForPlayer(pokemon: Pokemon, player_id: number) {
     return playerInstance.post(`/player/${player_id}/buy_pokemon`, <PokemonDb>{
         pokemon_id: pokemon.pokemon_id,

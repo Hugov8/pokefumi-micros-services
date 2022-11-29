@@ -14,6 +14,15 @@ export function modifyPlayer(playerId: number, data: Player): Player {
     return repository.getPlayer(playerId);
 }
 
+export function addPlayer(playerId: number){
+    repository.addPlayer(playerId)
+    return repository.getPlayer(playerId)
+}
+
+export function allPlayer(): Player[] {
+    return repository.allPlayer()
+}
+
 export function addPokemon(playerid: number, pokemon: Pokemon): Player | null {
     let team : Team = repository.getTeam(playerid);
     let added: boolean = false;
