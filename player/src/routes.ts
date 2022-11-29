@@ -18,7 +18,7 @@ export const register = (app: express.Application) => {
 
     app.post('/player', (req: any, res)=>{
         let userId = req.body.id
-        res.send(controller.addPlayer(userId))
+        res.status(200).send(controller.addPlayer(userId))
     })
 
     app.put('/player', (req: any, res) => {

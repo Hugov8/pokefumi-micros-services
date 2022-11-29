@@ -1,0 +1,164 @@
+---
+openapi: 3.0.0
+info:
+  title: Player API
+  description: This is the API of the player service
+  license:
+    name: GPL v3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.0
+tags:
+- name: admins
+  description: Operations available only to admins
+- name: reporter
+  description: Operation available only to reporter
+- name: player
+  description: Operations available only to player
+paths:
+  /:
+    get:
+      tags:
+        - developers
+      summary: home page of the service
+      description: |
+        Nothing to do
+      operationId: home
+      responses:
+        "200":
+          description: welcome message
+          content:
+            text/html:
+              schema:
+                type: string
+                example: <h1>Test</h1>
+  /player:
+    get:
+      tags:
+      - player
+      summary: Player get own informations      
+      parameters:
+        - in: header
+          name: token
+          schema:
+            type: string
+            format: uuid
+          required: true
+      
+      responses:
+        "200":
+          description: Player informations 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+    put:
+      tags:
+      - player
+      summary: Modify player own data
+      responses:
+        "201":
+          description: Player datas are modified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        "500":
+          description: Internal server error
+          content:
+            text/html:
+              example: "Internal Server Error"
+    post:
+      summary: Create a new user
+      tags:
+        - player
+      requestBody:
+        required: true
+        description: Contains the id
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  example: "123"
+      responses:
+        "200":
+          description: Create the player and return it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        
+  /player/<player_id>/buy_pokemon:
+    post:
+      tags:
+        - player
+      summary: Add a pokemon to the player's team
+      parameters:
+        - in: path
+          name: player_id
+          schema:
+            type: string
+            example: "1234"
+          required: true
+      responses:
+        "200":
+          description: The pokemon is well added to the team
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Player"
+        "400":
+          description: The pokemon cannot be added to the team
+          content:
+            text/html:
+              example: "Bad Request"
+components:
+  schemas:
+    Player:
+      required:
+      - user_id
+      - username
+      - credits
+      - team
+      type: object
+      properties:
+        user_id:
+          type: string
+          example: "1"
+        username: 
+          type: string
+          example: "remiCzn"
+        credits:
+          type: number
+          example: 2356
+        team:
+          type: object
+          required:
+            - user_id
+          properties:
+            user_id:
+              type: string
+              example: "23"
+            pokemon1:
+              type: number
+              example: 21
+            pokemon2:
+              type: number
+              example: 56
+            pokemon3:
+              type: number
+              example: 72
+            pokemon4:
+              type: number
+              example: 98
+            pokemon5:
+              type: number
+              example: 31
+            pokemon6:
+              type: number
+              example: 45
+            
