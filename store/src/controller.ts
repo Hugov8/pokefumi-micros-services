@@ -9,7 +9,7 @@ const pokemonInstance = axios.create({
 });
 
 const playerInstance = axios.create({
-    baseURL: "http://player:5001"
+    baseURL: "http://player:5000"
 })
 
 export async function getAllPokemon() {
@@ -41,8 +41,11 @@ async function getPokemonDetails(pokemon: PokemonDb): Promise<Pokemon> {
 
 // Rôle de player ici ?
 export async function buyPokemonForPlayer(pokemon: Pokemon, player_id: number) {
-    return playerInstance.post(`/player/${player_id}/buy_pokemon`, <PokemonDb>{
-        pokemon_id: pokemon.pokemon_id,
-        price: pokemon.price
+    return playerInstance.post(`/player/${player_id}/buy_pokemon`, {
+        pokemon: {
+            pokemon_id: pokemon.pokemon_id,
+            price: pokemon.price
+        }
+
     });
 }

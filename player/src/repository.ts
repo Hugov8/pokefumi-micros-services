@@ -51,6 +51,11 @@ export default class PlayerRepository {
         statement.run(playerId)
     }
 
+    createTeam(playerId: number) {
+        const statement = this.db.prepare("INSERT or REPLACE INTO team(user_id) VALUES(?)");
+        statement.run(playerId);
+    }
+
     addPokemonToTeam(id: number, pokemon_id: number, user_id: number) {
         const statement = this.db.prepare(`UPDATE team SET pokemon${id} = ? where user_id = ?`);
         statement.run(pokemon_id, user_id);

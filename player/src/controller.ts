@@ -17,7 +17,8 @@ export function modifyPlayer(playerId: number, data: Player): Player {
 }
 
 export function addPlayer(playerId: number){
-    repository.addPlayer(playerId)
+    repository.addPlayer(playerId);
+    repository.createTeam(playerId);
     return repository.getPlayer(playerId)
 }
 
