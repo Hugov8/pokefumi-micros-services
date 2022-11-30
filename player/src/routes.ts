@@ -7,8 +7,14 @@ export const register = (app: express.Application) => {
     app.get('/', (req,res) => res.send('<h1>Player service</h1>'));
 
     app.get('/player', (req: any, res) => {
-        //let datas = jwt.decode(req.get("token"));
-        res.status(200).send(controller.getPlayer(req.params.playerId))
+        let token = req.get("token");
+        let datas = jwt.decode(token);
+        const player = controller.getPlayer(datas.id);
+        if(player != undefined) {
+            return res.status(200).send(player);
+        } else {
+            return res.sendStatus(404);
+        }
     })
 
     //TODO: Supprimer (pour debug)
@@ -22,8 +28,8 @@ export const register = (app: express.Application) => {
     })
 
     app.put('/player', (req: any, res) => {
-        // let datas = jwt.decode(req.get("token"));
-        let userId = req.body.id;
+        let datas = jwt.decode(req.get("token"));
+        let userId = datas.id;
         let data = req.body.data;
         res.status(201).send(controller.modifyPlayer(userId, data));
     })

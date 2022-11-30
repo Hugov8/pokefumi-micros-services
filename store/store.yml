@@ -45,7 +45,34 @@ paths:
               schema:
                 $ref: "#/components/schemas/Pokemon"
 
-  # /pokemon/<id>/buy: TODO
+  /pokemon/<id>/buy:
+    post:
+      summary: Buy a pokemon for the player
+      parameters:
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: number
+            format: uuid
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: number
+            example: 6
+      responses:
+        "200":
+          description: "Pokemon is well bought"
+        "400":
+          description: "Wrong authentication token"
+        "404":
+          description: "Pokemon not found"
+        "500":
+          description: "Internal server error"
+      
+
+
 
 components:
   schemas:

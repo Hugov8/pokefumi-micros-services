@@ -1,5 +1,5 @@
 import * as jwt from "jsonwebtoken";
 
 export const decode = (token: string) : any => {
-    jwt.verify(token, "secret");
+    return jwt.verify(token, "1234");
 }

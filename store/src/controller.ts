@@ -5,11 +5,11 @@ import axios from "axios";
 const repository = new StoreRepository();
 
 const pokemonInstance = axios.create({
-    baseURL: "http://localhost:5003"
+    baseURL: "http://pokemon:5003"
 });
 
 const playerInstance = axios.create({
-    baseURL: "http://localhost:5001"
+    baseURL: "http://player:5001"
 })
 
 export async function getAllPokemon() {

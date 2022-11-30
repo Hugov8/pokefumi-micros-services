@@ -15,18 +15,25 @@ export const register = (app: express.Application) => {
     })
 
     app.post("/pokemon/:id/buy", async (req, res) => {
-        if (req.headers.token == undefined) {
-            return res.sendStatus(400);
+        try {
+            if (req.headers.token == undefined) {
+                return res.sendStatus(400);
+            }
+            const token = req.headers.token.toString();
+            const user: { id: number } = jwt.decode(token);
+    
+            const pokemon_id = parseInt(req.params.id);
+            const pokemon: Pokemon | {} = await getPokemon(pokemon_id);
+            if((<Pokemon>pokemon).pokemon_id == undefined) {
+                return res.sendStatus(404);
+            }
+            const real_pokemon = <Pokemon>pokemon;
+            await buyPokemonForPlayer(real_pokemon, user.id);
+            return res.status(200).send("Pokémon bought");
+        } catch(error) {
+            console.log(error)
+            return res.sendStatus(500); 
         }
-        const token = req.headers.token.toString();
-        const user: { id: number } = jwt.decode(token);
-
-        const pokemon_id = parseInt(req.params.id);
-        const pokemon: Pokemon | {} = await getPokemon(pokemon_id);
-        if((<Pokemon>pokemon).pokemon_id == undefined) {
-            return res.sendStatus(404);
-        }
-        const real_pokemon = <Pokemon>pokemon;
-        await buyPokemonForPlayer(real_pokemon, user.id);
+        
     })
 }
