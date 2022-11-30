@@ -1,0 +1,444 @@
+---
+openapi: 3.0.0
+info:
+  title: Match API
+  description: This is the API of the match and round service
+  license:
+    name: GPL v3
+    url: https://www.gnu.org/licenses/gpl-3.0.en.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/pokefumi/Authentification/1-0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: admins
+  description: Operations available only to admins
+- name: reporter
+  description: Operation available only to reporter
+- name: player
+  description: Operations available only to player
+paths:
+  /:
+    get:
+      tags:
+        - developers
+      summary: home page of the service
+      description: |
+        Nothing to do
+      operationId: home
+      responses:
+        "200":
+          description: welcome message
+          content:
+            text/html:
+              schema:
+                type: string
+                example: <h1>Test</h1>
+  /createMatch:
+    post:
+      tags:
+      - player
+      summary: create a match
+      description: Create a match in the database
+      
+      parameters:
+        - in: header
+          name: token
+          schema:
+            type: string
+            format: uuid
+          required: true
+      
+      responses:
+        "200":
+          description: full JSON database 
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Id of the match
+        "400":
+          description: Miss a token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Uncorrect token provided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /openMatch:
+    get:
+      tags:
+        - player
+      summary: List of all open match that can be joined
+
+      responses:
+        '200':
+          description: List of all open match that can be joined
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    data:
+                      type: integer
+                      description: number of the registered player in the database
+        
+
+  /match/{idMatch}/join:
+    post:
+      tags:
+      - player
+      summary: Join a match
+      parameters:
+        - in: path
+          name: idMatch
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                enum: ["success"]
+        "400":
+          description: bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Match cannot be joined
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  
+  /match/{idMatch}/winner:
+    post:
+      tags:
+      - player
+      summary: Finish a match and give the winner
+      parameters:
+        - in: path
+          name: idMatch
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Give the Id of the winner
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  winner:
+                    type: integer
+                    description: Id of the winner of the match
+        "400":
+          description: bad use of the route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Match cannot be joined
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /match/{idMatch}:
+    get:
+      tags:
+      - player
+      summary: Get the detail of the match
+      parameters:
+        - in: path
+          name: idMatch
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Give the details of the match
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MatchData'
+        "404":
+          description: Match does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /match/{idMatch}/addPokemon:
+    post:
+      tags:
+      - player
+      summary: Add a pokemon to the current round of the match
+      parameters:
+        - in: path
+          name: idMatch
+          required: true
+          schema:
+            type: number
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+            description: token of the player
+        - in: query
+          name: idPokemon
+          required: true
+          schema:
+            type: integer
+            description: Id of the pokemon
+
+      responses:
+        "200":
+          description: Give the details of the match
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    enum:
+                      - "success"
+        "400":
+          description: Bad input parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Does not have access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Match does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /match/{idMatch}/play_round:
+    post:
+      tags:
+      - player
+      summary: Add a pokemon to the current round of the match
+      parameters:
+        - in: path
+          name: idMatch
+          required: true
+          schema:
+            type: number
+        - in: header
+          name: token
+          required: true
+          schema:
+            type: string
+            description: token of the player
+
+      responses:
+        "200":
+          description: Give the details of round with the winner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoundData'
+        "400":
+          description: Bad use of the route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Does not have access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Match does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /match/{idMatch}/current_round:
+    post:
+      tags:
+      - player
+      summary: Get the details of the round
+      parameters:
+        - in: path
+          name: idMatch
+          required: true
+          schema:
+            type: number
+
+      responses:
+        "200":
+          description: Give the details of round with the winner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoundData'
+        "400":
+          description: Bad use of the route
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Does not have access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Match does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+  /match/{idMatch}/nextRound:
+    post:
+      tags:
+      - player
+      summary: Get the details of the round
+      parameters:
+        - in: path
+          name: idMatch
+          required: true
+          schema:
+            type: number
+
+      responses:
+        "201":
+          description: Give the details of round with the winner
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoundData'
+        "400":
+          description: Bad parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Match does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+
+
+components:
+  schemas:
+    ErrorMessage:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Description of the failure
+
+    MatchData:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Id of the match/round
+        round1:
+          type: integer
+          description: Id if the first round
+        round2:
+          type: integer
+          description:  Id of the second round
+        round3:
+          type: integer
+          description: Id of the third round
+        current_round:
+          type: integer
+          description: Number of the round that is begun/finished
+        joueur1:
+          type: integer
+          description: Id of player 1
+        joueur2:
+          type: integer
+          description: Id of player 2
+        winner:
+          type: integer
+          description: Id of the winner of the game
+        open:
+          type: boolean
+          description: True if the match is open to everyone
+        status:
+          $ref: '#/components/schemas/Status'
+    
+    RoundData:
+      type: object
+      properties:
+        id: 
+          type: integer
+          description: Id of the round
+        match_id:
+          type: integer
+          description: Id of the match associated with the round
+        pokemon_j1:
+          type: integer
+          description: Id of the pokemon of the first player
+        pokemon_j2:
+          type: integer
+          description: Id of the pokemon of the second player
+        status:
+          $ref: '#/components/schemas/Status'
+        winner:
+          type: integer
+          description: Id of the player who wins the round
+        
+
+    Status:
+      type: integer
+      enum: [-1, 0, 1]
+      description: "-1 if the match/round is over, 0 if the match/round is in preparation, 1 if the match/round i in progress"

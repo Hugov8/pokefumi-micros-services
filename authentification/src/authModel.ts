@@ -6,7 +6,12 @@ type LoginInfo = {
     login : string,
     password: string
 }
-type AllUsers = LoginInfo[]
+type AllUsers = {
+    id: number | bigint
+    login: string
+    password: string
+} []
+
 type UserInfo = string
 
 export interface ApiResponse<ResBody> extends Response {

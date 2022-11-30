@@ -135,7 +135,7 @@ export const register = (app: express.Application) => {
             const numJoueur: number = match.joueur1==idPlayer.id ? 1 : 2
             const change: number = matchRepo.addPokemonRound(currentRound(match), numJoueur, idPokemon)
             if(change==0){
-                return res.status(400).json({message: "erreur inscritpion pokemon"})
+                return res.status(500).json({message: "erreur inscritpion pokemon"})
             }
 
             return res.status(200).json({data: "success"})
@@ -175,7 +175,7 @@ export const register = (app: express.Application) => {
             const winner: ID = playRound(round)==1 ? match.joueur1 : match.joueur2
             const change: number = matchRepo.playRound(round.id, winner)
             if(change==0){
-                return res.status(400).json({message: "erreur gagnant"})
+                return res.status(500).json({message: "erreur gagnant"})
             }
             round.winner = winner
             round.status = -1

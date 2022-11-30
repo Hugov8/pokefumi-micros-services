@@ -9,6 +9,7 @@ export const register = (app: express.Application) => {
     app.get('/player', (req: any, res) => {
         let token = req.get("token");
         let datas = jwt.decode(token);
+        console.log(datas)
         const player = controller.getPlayer(datas.id);
         if(player != undefined) {
             return res.status(200).send(player);

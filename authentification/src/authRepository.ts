@@ -28,7 +28,7 @@ export default class AuthRepository {
     }
 
     getAllUsers(): AllUsers {
-        const query = "SELECT login, password FROM auth"
+        const query = "SELECT * FROM auth"
         const statement = this.db.prepare(query);
         return statement.all()
     }
