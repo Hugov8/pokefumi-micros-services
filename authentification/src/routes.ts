@@ -78,13 +78,5 @@ export const register = (app: express.Application) => {
         return res.status(200).json({data: infos})
     });
 
-    // Using only for tests purpose
-    // To delete
-    app.get('/testToken/:token', (req: ApiRequest<{token: string},any, any>,
-        res: ApiResponse<any> )=>{
-            const info = jwt.verify(req.params.token, privateKey)
-            console.log(jwt.verify(req.params.token, privateKey))
-            return res.status(200).json({data: info})
-        })
 
 }

@@ -17,11 +17,6 @@ export const register = (app: express.Application) => {
         }
     })
 
-    //TODO: Supprimer (pour debug)
-    app.get('/allPlayer', (req, res) => {
-        res.send(controller.allPlayer())
-    })
-
     app.post('/player', (req: any, res)=>{
         let userId = req.body.id
         res.status(200).send(controller.addPlayer(userId))

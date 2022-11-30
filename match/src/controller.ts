@@ -34,7 +34,6 @@ const forcePokemon = (pokemon: Pokemon) => pokemon.base_experience
 
 export function playRound(round: RoundData): number{
 
-    //TODO appeler service pokemon pour avoir les stats
     const pokemon1: Promise<Pokemon> = getPokemon(round.pokemon_j1).then(val => val).catch(err => console.log(err))
     const pokemon2: Promise<Pokemon> = getPokemon(round.pokemon_j2).then(val => val).catch(err => console.log(err))
     
